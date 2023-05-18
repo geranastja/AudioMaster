@@ -1,24 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Diagnostics;
-using System.IO;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Interactions;
-using System.Text;
-using NUnit.Framework.Interfaces;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using OpenQA.Selenium.Remote;
-using System.Runtime.InteropServices.ComTypes;
-using System.ComponentModel;
-using BoxTests.Properties;
-using OpenQA.Selenium.DevTools;
-using System.Management.Instrumentation;
-using System.Runtime.InteropServices;
-using static System.Net.Mime.MediaTypeNames;
+
 
 namespace BoxTests
 {

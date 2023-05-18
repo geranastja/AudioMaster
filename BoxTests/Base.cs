@@ -4,12 +4,10 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Interactions;
 using System.Text;
 using NUnit.Framework.Interfaces;
 using System.Collections;
-using System.Collections.ObjectModel;
-using OpenQA.Selenium.Remote;
+
 
 
 namespace BoxTests
