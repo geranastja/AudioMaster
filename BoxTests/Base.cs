@@ -22,12 +22,13 @@ namespace BoxTests
         protected WebDriverWait iWait;
         protected string Message;
         protected static string TestName;
-
+        protected string AdminLogin;
+        protected string ModerateLogin;
 
         protected static IEnumerable GetSites()
         {
 
-            yield return new TestCaseData("https://ac.sc-discovery.ru/", "admin");
+            yield return new TestCaseData("https://ac.sc-discovery.ru/");
           //  yield return new TestCaseData("https://audiomaster.sc-discovery.ru/", "admin");
 
         }
@@ -62,12 +63,12 @@ namespace BoxTests
                 driver = new ChromeDriver(service, options,
                     TimeSpan.FromSeconds(40));
                 baseURL = "https://ac.sc-discovery.ru/";
-
                 iWait = new WebDriverWait(driver, TimeSpan.FromSeconds(40));
                 TrySetEncoding();
                 TestName = GetTestClass();
-
-            }
+                AdminLogin = "admin";
+                ModerateLogin = "adminAutoTest";
+    }
             catch
             {
                 Cleanup();
@@ -413,8 +414,8 @@ namespace BoxTests
         protected void Authorization(string site, string login)
         {
             baseURL = site;
-            //AdminLogin = login;
-            Message = "Login under the user ";
+            Message = "Login under the user";
+            driver.Manage().Window.Maximize();
             //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
             WaitUntilVisible(By.XPath(".//*[@id='login']"));
             driver.FindElement(By.XPath(".//*[@id='login']")).SendKeys(login);

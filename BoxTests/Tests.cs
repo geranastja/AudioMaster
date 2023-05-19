@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using OpenQA.Selenium;
-
+using OpenQA.Selenium.DevTools.V106.DOM;
 
 namespace BoxTests
 {
@@ -11,15 +11,13 @@ namespace BoxTests
 
         [Test]
         [TestCaseSource(nameof(GetSites))]
-        public void User(string site, string login)
+        public void User(string site)
         {
             string User = "UserAutoTest";
             string EditUser = "EditUserAutoTest";
             driver.Navigate().GoToUrl(baseURL+ "cabinet/users");
-            driver.Manage().Window.Maximize();
-            Authorization(site, login);
+            Authorization(site, AdminLogin);
             Message = "Search through a filter the user " + User;
-
             WaitUntilVisible(By.XPath(".//*[@role='rowgroup']/tr[1]"));
             WaitUntilVisibleAndClick(By.XPath(".//*[@id='search-select']"));//filter
             WaitUntilVisibleAndClick(By.XPath(".//*[@id='search-select']/option[@value='username']"));//select filter
@@ -126,13 +124,12 @@ namespace BoxTests
 
         [Test]
         [TestCaseSource(nameof(GetSites))]
-        public void Cabinet(string site, string login)
+        public void Cabinet(string site)
         {
             string Cabinet = "CabinetAutoTest";
             string EditCabinet = "EditCabinetAutoTest";
             driver.Navigate().GoToUrl(baseURL + "cabinet/cabinets");
-            driver.Manage().Window.Maximize();
-            Authorization(site, login);
+            Authorization(site, ModerateLogin);
             WaitUntilVisible(By.XPath(".//*[@role='rowgroup']/tr[1]"));
             //если есть Cabinet, то удаляем
             if (IsElementPresent(By.XPath("(.//*[contains(text(),'" + Cabinet + "')])[1]")) == true)
@@ -157,7 +154,7 @@ namespace BoxTests
                 WaitUntilInVisible(By.XPath(".//a[contains(text(),'" + EditCabinet + "')]"));
                 Console.WriteLine(Message);
             }
-            Console.WriteLine("Adding the new user " + Cabinet);
+            Console.WriteLine("Adding the new user Cabinet " + Cabinet);
             Message = "  Field Validation";
             WaitUntilVisibleAndClick(By.XPath(".//button[contains(text(),'Add cabinet')]"));
             WaitUntilVisible(By.XPath(".//*[@type='submit']"));
@@ -206,5 +203,47 @@ namespace BoxTests
         }
 
 
+        [Test]
+        [TestCaseSource(nameof(GetSites))]
+        public void Moderate(string site)
+        {
+            driver.Navigate().GoToUrl(baseURL + "cabinet/records");
+            Authorization(site, ModerateLogin);
+            Message = "1. Records ";
+            WaitUntilVisible(By.XPath("(.//*[@role='rowgroup']//a)[1]"));
+            string recordId = driver.FindElement(By.XPath("(.//*[@role='rowgroup']//a)[1]")).Text;
+            driver.FindElement(By.XPath("(.//*[@role='rowgroup']//a)[1]")).Click();
+            Console.WriteLine(Message);
+            Message = "2. Record " + recordId;
+            WaitUntilVisible(By.XPath(".//h1[contains(text(),'"+ recordId + "')]"));
+            WaitUntilVisibleAndClick(By.XPath("//button[contains(text(),'Moderate')]"));
+            Console.WriteLine(Message);
+            Message = "3. Moderate " + recordId;
+            WaitUntilVisible(By.XPath("//h1[contains(text(),'Moderate record')]"));
+            int i = 1;
+            WaitUntilVisible(By.XPath("(.//*[contains(@class,'enter justify-between mt')][1]//label)[1]/span[1]"));
+            Console.WriteLine(Message);
+            Message = "  3.1. Mark all the questions ";
+            while (IsElementPresent(By.XPath("((.//*[contains(@class,'enter justify-between mt')])["+i+"]" +
+                "//label)[1]")) == true)
+            {
+                driver.FindElement(By.XPath("((.//*[contains(@class,'enter justify-between mt')])["+i+"]" +
+                    "//label)[1]")).Click();
+                i++;
+            }
+            Console.WriteLine(Message);
+            Message = "  3.2. Mark attention and cheating ";
+            driver.FindElement(By.XPath(".//*[@for='attention']")).Click();
+            driver.FindElement(By.XPath(".//*[@for='cheating']")).Click();
+            driver.FindElement(By.XPath(".//*[@type='submit']")).Click();
+            Console.WriteLine(Message);
+            Message = "4. Сhecking the record is missing in the Records";
+            WaitUntilInVisible(By.XPath("(.//*[@role='rowgroup']//a)[contains(text(),'"+ recordId + "')]"));
+            Message = "5. Сhecking the record is in Moderates";
+            driver.Navigate().GoToUrl(baseURL + "cabinet/moderate");
+            WaitUntilVisible(By.XPath("(.//*[@role='rowgroup']//a)[contains(text(),'" + recordId + "')]"));
+            Console.WriteLine(Message);
+
+        }
     }
 }
