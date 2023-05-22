@@ -414,7 +414,7 @@ namespace BoxTests
         protected void Authorization(string site, string login)
         {
             baseURL = site;
-            Message = "Login under the user";
+            Message = "1. Login under the user ";
             driver.Manage().Window.Maximize();
             //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
             WaitUntilVisible(By.XPath(".//*[@id='login']"));

@@ -1,7 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.DevTools.V106.DOM;
 
 namespace BoxTests
 {
@@ -129,12 +128,15 @@ namespace BoxTests
             string Cabinet = "CabinetAutoTest";
             string EditCabinet = "EditCabinetAutoTest";
             driver.Navigate().GoToUrl(baseURL + "cabinet/cabinets");
-            Authorization(site, ModerateLogin);
+            Authorization(site, AdminLogin);
+            Message = "2. Page of Cabinets";
             WaitUntilVisible(By.XPath(".//*[@role='rowgroup']/tr[1]"));
+            Console.WriteLine(Message);
             //если есть Cabinet, то удаляем
+            Console.WriteLine("3. Check if there are cabinets, if there are, then delete");
             if (IsElementPresent(By.XPath("(.//*[contains(text(),'" + Cabinet + "')])[1]")) == true)
             {
-                Message = "   Deleting " + Cabinet;
+                Message = "   3.1. Deleting " + Cabinet;
                 driver.FindElement(By.XPath(".//*[contains(text(),'" + Cabinet + "')]" +
                     "//ancestor::tr//*[contains(@class,'menu-dots')]")).Click();
                 WaitUntilVisibleAndClick(By.XPath(".//*[contains(text(),'" + Cabinet + "')]//ancestor::tr//*[contains(text(),'Delete')]"));
@@ -146,7 +148,7 @@ namespace BoxTests
             if (IsElementPresent(By.XPath("(.//*[contains(text(),'" + EditCabinet + "')])[1]")) == true)
             {
 
-                Message = "   Deleting " + EditCabinet;
+                Message = "   3.2. Deleting " + EditCabinet;
                 driver.FindElement(By.XPath(".//*[contains(text(),'" + EditCabinet + "')]" +
                     "//ancestor::tr//*[contains(@class,'menu-dots')]")).Click();
                 WaitUntilVisibleAndClick(By.XPath(".//*[contains(text(),'" + EditCabinet + "')]//ancestor::tr//*[contains(text(),'Delete')]"));
@@ -154,11 +156,10 @@ namespace BoxTests
                 WaitUntilInVisible(By.XPath(".//a[contains(text(),'" + EditCabinet + "')]"));
                 Console.WriteLine(Message);
             }
-            Console.WriteLine("Adding the new user Cabinet " + Cabinet);
-            Message = "  Field Validation";
+            Console.WriteLine("4. Adding the new Cabinet " + Cabinet);
+            Message = "  4.1.  Field Validation";
             WaitUntilVisibleAndClick(By.XPath(".//button[contains(text(),'Add cabinet')]"));
             WaitUntilVisible(By.XPath(".//*[@type='submit']"));
-
             //checking required fields
             driver.FindElement(By.XPath(".//*[@id='Period']")).SendKeys("1");
             driver.FindElement(By.XPath(".//*[@type='submit']")).Click();
@@ -166,18 +167,16 @@ namespace BoxTests
             WaitUntilVisible(By.XPath(".//*[@id='Licence']/following-sibling::span[contains(@class,'error')]"));
             Console.WriteLine(Message);
             //fill in the fields
-            Message = "  Entering data into fields ";
+            Message = "  4.2. Entering data into fields ";
             driver.FindElement(By.XPath(".//*[@id='text']")).SendKeys(Cabinet);
             driver.FindElement(By.XPath(".//*[@id='Licence']")).SendKeys(Cabinet);
-           
             driver.FindElement(By.XPath(".//*[@type='submit']")).Click();
             WaitUntilVisible(By.XPath(".//button[contains(text(),'Add cabinet')]"));
             driver.FindElement(By.XPath("(.//*[contains(text(),'"+ Cabinet + "')])[1]"));
             Console.WriteLine(Message);
 
             //edit 
-            Message = "editing";
-
+            Message = "5. Editing";
             driver.FindElement(By.XPath(".//*[contains(text(),'" + Cabinet + "')]" +
                    "//ancestor::tr//*[contains(@class,'menu-dots')]")).Click();
             WaitUntilVisibleAndClick(By.XPath(".//*[contains(text(),'" + Cabinet + "')]//ancestor::tr//*[contains(text(),'Edit')]"));
@@ -192,7 +191,7 @@ namespace BoxTests
             driver.FindElement(By.XPath("(.//*[contains(text(),'" + EditCabinet + "')])[1]"));
             Console.WriteLine(Message);
 
-            Message = "   Deleting " + Cabinet;
+            Message = "6. Deleting " + Cabinet;
             driver.FindElement(By.XPath(".//*[contains(text(),'" + Cabinet + "')]" +
                 "//ancestor::tr//*[contains(@class,'menu-dots')]")).Click();
             WaitUntilVisibleAndClick(By.XPath(".//*[contains(text(),'" + Cabinet + "')]//ancestor::tr//*[contains(text(),'Delete')]"));
@@ -209,21 +208,21 @@ namespace BoxTests
         {
             driver.Navigate().GoToUrl(baseURL + "cabinet/records");
             Authorization(site, ModerateLogin);
-            Message = "1. Records ";
+            Message = "2. Page of Records ";
             WaitUntilVisible(By.XPath("(.//*[@role='rowgroup']//a)[1]"));
             string recordId = driver.FindElement(By.XPath("(.//*[@role='rowgroup']//a)[1]")).Text;
             driver.FindElement(By.XPath("(.//*[@role='rowgroup']//a)[1]")).Click();
             Console.WriteLine(Message);
-            Message = "2. Record " + recordId;
+            Message = "3. Record " + recordId;
             WaitUntilVisible(By.XPath(".//h1[contains(text(),'"+ recordId + "')]"));
             WaitUntilVisibleAndClick(By.XPath("//button[contains(text(),'Moderate')]"));
             Console.WriteLine(Message);
-            Message = "3. Moderate " + recordId;
+            Message = "4. Moderate " + recordId;
             WaitUntilVisible(By.XPath("//h1[contains(text(),'Moderate record')]"));
             int i = 1;
             WaitUntilVisible(By.XPath("(.//*[contains(@class,'enter justify-between mt')][1]//label)[1]/span[1]"));
             Console.WriteLine(Message);
-            Message = "  3.1. Mark all the questions ";
+            Message = "  4.1. Mark all the questions ";
             while (IsElementPresent(By.XPath("((.//*[contains(@class,'enter justify-between mt')])["+i+"]" +
                 "//label)[1]")) == true)
             {
@@ -232,18 +231,56 @@ namespace BoxTests
                 i++;
             }
             Console.WriteLine(Message);
-            Message = "  3.2. Mark attention and cheating ";
+            Message = "  4.2. Mark attention and cheating ";
             driver.FindElement(By.XPath(".//*[@for='attention']")).Click();
             driver.FindElement(By.XPath(".//*[@for='cheating']")).Click();
             driver.FindElement(By.XPath(".//*[@type='submit']")).Click();
             Console.WriteLine(Message);
-            Message = "4. Сhecking the record is missing in the Records";
+            Message = "5. Сhecking the record is missing in the Records";
             WaitUntilInVisible(By.XPath("(.//*[@role='rowgroup']//a)[contains(text(),'"+ recordId + "')]"));
-            Message = "5. Сhecking the record is in Moderates";
+            Console.WriteLine(Message);
+            Message = "6. Сhecking the record is in Moderates";
             driver.Navigate().GoToUrl(baseURL + "cabinet/moderate");
             WaitUntilVisible(By.XPath("(.//*[@role='rowgroup']//a)[contains(text(),'" + recordId + "')]"));
             Console.WriteLine(Message);
 
         }
+
+
+        [Test]
+        [TestCaseSource(nameof(GetSites))]
+        public void Glue(string site)
+        {
+            driver.Navigate().GoToUrl(baseURL + "cabinet/records");
+            Authorization(site, AdminLogin);
+            Message = "2. Page of Records";
+            WaitUntilVisible(By.XPath("(.//*[@role='rowgroup']//a)[1]"));
+            Console.WriteLine(Message);
+            Message = "3. Glu 2 records ";
+            WaitUntilVisibleAndClick(By.XPath(".//label[@for='search-glue']"));
+            WaitUntilVisible(By.XPath(".//*[contains(@class,'btn btn-outlined')][@disabled]"));//the button Glu isnt active
+            WaitUntilVisibleAndClick(By.XPath("(.//*[@role='rowgroup']//*[contains(@for,'search-glue')])[1]"));
+            driver.FindElement(By.XPath("(.//*[@role='rowgroup']//*[contains(@for,'search-glue')])[2]")).Click();
+           string Record2 = driver.FindElement(By.XPath("(.//*[@role='rowgroup']//a)[1]")).Text;
+            string Record1 = driver.FindElement(By.XPath("(.//*[@role='rowgroup']//tr[2]//a)[1]")).Text;
+            WaitUntilInVisible(By.XPath(".//*[contains(@class,'btn btn-outlined')][@disabled]"));//the button Glu is active
+            driver.FindElement(By.XPath(".//*[contains(@class,'btn btn-outlined')]")).Click();
+            
+            
+            Console.WriteLine(Message + Record1 + ", " + Record2);
+            Message = "4. Check info on Page of glue record ";
+             WaitUntilVisible(By.XPath(".//*[contains(text(),'Record is glued')]"));
+            WaitUntilInVisible(By.XPath(".//*[@class='wrapper-preloader']/div"));//preloDER isnt
+            string GluRecord = driver.FindElement(By.XPath(".//*[@class='text-xl font-semibold uppercase']")).Text;
+            WaitUntilVisible(By.XPath(".//*[contains(text(),'"+ Record1 + ","+ Record2 + "')]"));
+            Console.WriteLine(Message + GluRecord);
+            Message = "5. Click 'Back'. Check the absence of the glue record and the presence of the old records";
+            driver.FindElement(By.XPath(".//*[contains(text(),'Back')]")).Click();
+            WaitUntilVisible(By.XPath("(.//*[@role='rowgroup']//a)[contains(text(),'"+ GluRecord + "')]"));
+            WaitUntilInVisible(By.XPath("(.//*[@role='rowgroup']//a)[contains(text(),'" + Record2 + "')]"));
+            WaitUntilInVisible(By.XPath("(.//*[@role='rowgroup']//a)[contains(text(),'" + Record1 + "')]"));
+            Console.WriteLine(Message);
+        }
+
     }
 }
